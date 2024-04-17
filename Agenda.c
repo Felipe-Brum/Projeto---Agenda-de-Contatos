@@ -31,7 +31,7 @@ ERROS adicionar(Contato contato[], int *pos){
     printf("Digite seu telefone (11912345678): ");
     scanf("%ld", &contato[*pos].telefone);
     clearBuffer();
-    if(sizeof(contato[*pos]. telefone) == 0){
+    if(sizeof(contato[*pos]. telefone) == 0 || contato[*pos].telefone < 10000000000 || contato[*pos].telefone > 99999999999){
         return  TELEFONE_INVALIDO;
     }
 
@@ -45,10 +45,11 @@ ERROS listar(Contato contatos[], int *pos) {
         return SEM_CONTATOS;
 
     for(int i = 0; i < *pos; i++){
-        printf("%s\t", contatos[i].nome);
-        printf("%s\t", contatos[i].sobrenome);
-        printf("%s\t", contatos[i].email);
-        printf("%d\n", &contatos[i].telefone);
+        printf("Nome: %s    ", contatos[i].nome);
+        printf("Sobrenome: %s    ", contatos[i].sobrenome);
+        printf("Email: %s    ", contatos[i].email);
+        printf("Telefone: (%02ld) %05ld-%04ld\n", contatos[i].telefone / 1000000000, (contatos[i].telefone / 10000) % 100000, contatos[i].telefone % 10000);
+
     }
     return OK; 
 }
