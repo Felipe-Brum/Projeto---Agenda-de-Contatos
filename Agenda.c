@@ -54,6 +54,34 @@ ERROS listar(Contato contatos[], int *pos) {
     return OK; 
 }
 
+ERROS deletar(Contato contato[], int *pos){
+    if(*pos == 0)
+        return SEM_CONTATOS;
+
+    long telefone_deletar;
+    printf("Entre com o telefone do contato a ser deletado: ");
+    scanf("%ld", &telefone_deletar);
+    clearBuffer();
+
+    int i;
+    for(i = 0; i < *pos; i++){
+        if(contato[i].telefone == telefone_deletar)
+            break;
+    }
+
+    if(i == *pos) 
+        return TELEFONE_NAO_ENCONTRADO;
+
+    for(; i < *pos - 1; i++){
+        contato[i] = contato[i+1];
+    }
+  
+    *pos = *pos - 1;
+
+    return OK;
+}
+
+
 void clearBuffer(){
     int c;
     while ((c = getchar()) != '\n' && c != EOF);

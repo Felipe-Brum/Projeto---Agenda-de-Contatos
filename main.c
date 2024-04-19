@@ -3,7 +3,7 @@
 
 int main(){
 
-    funcao fs[] = {adicionar, listar};
+    funcao fs[] = {adicionar, listar, deletar};
 
     Contato contatos[TOTAL];
 
