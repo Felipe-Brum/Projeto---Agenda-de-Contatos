@@ -44,6 +44,7 @@ ERROS listar(Contato contatos[], int *pos) {
     if(*pos == 0)
         return SEM_CONTATOS;
 
+    printf("\n==================== Lista de Contatos ====================\n");
     for(int i = 0; i < *pos; i++){
         printf("Nome: %s    ", contatos[i].nome);
         printf("Sobrenome: %s    ", contatos[i].sobrenome);
@@ -51,6 +52,7 @@ ERROS listar(Contato contatos[], int *pos) {
         printf("Telefone: (%02ld) %05ld-%04ld\n", contatos[i].telefone / 1000000000, (contatos[i].telefone / 10000) % 100000, contatos[i].telefone % 10000);
 
     }
+    printf("===========================================================\n");
     return OK; 
 }
 
@@ -81,6 +83,34 @@ ERROS deletar(Contato contato[], int *pos){
     return OK;
 }
 
+ERROS salvar(Contato contatos[], int pos) {
+    FILE *file = fopen("contatos.bin", "wb");
+    if (file == NULL) {
+        printf("Não foi possível abrir o arquivo para escrita\n");
+        return ERRO_ARQUIVO;
+    }
+
+    fwrite(contatos, sizeof(Contato), pos, file);
+
+    fclose(file);
+    return OK;
+}
+
+ERROS carregar(Contato contatos[], int *pos) {
+    FILE *file = fopen("contatos.bin", "rb");
+    if (file == NULL) {
+        printf("Não foi possível abrir o arquivo para leitura\n");
+        return ERRO_ARQUIVO;
+    }
+
+    *pos = 0;
+    while (fread(&contatos[*pos], sizeof(Contato), 1, file) == 1) {
+        (*pos)++;
+    }
+
+    fclose(file);
+    return OK;
+}
 
 void clearBuffer(){
     int c;
