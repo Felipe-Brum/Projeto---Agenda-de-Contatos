@@ -1,46 +1,68 @@
 #include <stdio.h>
 #include "Agenda.h"
 
-int main(){
+int main() {
+    funcao fs[] = {adicionar, listar, deletar, alterar};
 
-    funcao fs[] = {adicionar, listar, deletar};
+    Contato contatos_pessoais[TOTAL];
+    Contato contatos_trabalho[TOTAL];
 
-    Contato contatos[TOTAL];
+    int pos_pessoais = 0;
+    int pos_trabalho = 0;
 
-    int pos;
+    carregar(contatos_pessoais, &pos_pessoais, "contatos_pessoais.bin");
+    carregar(contatos_trabalho, &pos_trabalho, "contatos_trabalho.bin");
 
-    carregar(contatos, &pos);
-
-    int opcao;
-    do{
+    int opcao, agenda;
+    do {
         printf("\nMenu principal\n");
         printf("1 - Adicionar contato\n");
         printf("2 - Listar contato\n");
         printf("3 - Deletar contato\n");
+        printf("4 - Alterar contato\n");
         printf("0 - Sair\n");
         printf("Escolha uma opcao: ");
 
         scanf("%d", &opcao);
         opcao--;
-        if(opcao > 2)
-            printf("Opcao invalida\n");
-        else if(opcao >= 0) {
-            ERROS erro = fs[opcao](contatos, &pos);
-            if(erro == NOME_INVALIDO) 
-                printf("Erro ao executar a operacao: NOME_INVALIDO - %d\n", erro);
-            else if(erro == SOBRENOME_INVALIDO)
-                printf("Erro ao executar a operacao: SOBRENOME_INVALIDO - %d\n", erro);
-            else if(erro == EMAIL_INVALIDO)
-                printf("Erro ao executar a operacao: EMAIL_INVALIDO - %d\n", erro);
-            else if(erro == TELEFONE_INVALIDO)
-                printf("Erro ao executar a operacao: TELEFONE_INVALIDO - %d\n", erro);
+        if(opcao >= 0 && opcao <= 3) {
+            printf("\nEscolha a agenda:\n");
+            printf("1 - Pessoal\n");
+            printf("2 - Trabalho\n");
+            printf("Escolha uma opcao: ");
+            scanf("%d", &agenda);
+            agenda--;
+
+            Contato *contatos;
+            int *pos;
+            char *arquivo;
+
+            if(agenda == 0) {
+                contatos = contatos_pessoais;
+                pos = &pos_pessoais;
+                arquivo = "contatos_pessoais.bin";
+            } else if(agenda == 1) {
+                contatos = contatos_trabalho;
+                pos = &pos_trabalho;
+                arquivo = "contatos_trabalho.bin";
+            } else {
+                printf("Agenda invalida\n");
+                continue;
+            }
+
+            ERROS erro = fs[opcao](contatos, pos);
+            if(erro != OK) 
+                printf("Erro ao executar a operacao: %d\n", erro);
         }
-        else
+        else if(opcao == -1)
             printf("Sair...\n");
+        else
+            printf("Opcao invalida\n");
 
     } while(opcao >= 0);
 
-    salvar(contatos, pos);
+    salvar(contatos_pessoais, pos_pessoais, "contatos_pessoais.bin");
+    salvar(contatos_trabalho, pos_trabalho, "contatos_trabalho.bin");
 
     return 0;
 }
