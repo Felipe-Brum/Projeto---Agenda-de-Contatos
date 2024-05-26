@@ -1,8 +1,37 @@
 #include <stdio.h>
 #include <string.h>
+#include <regex.h>
 #include "Agenda.h"
 
-ERROS adicionar(Contato contato[], int *pos){
+int validarEmail(const char *email) {
+    regex_t regex;
+    int reti;
+
+    reti = regcomp(&regex, "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$", REG_EXTENDED);
+    if (reti) {
+        return 0;
+    }
+
+    reti = regexec(&regex, email, 0, NULL, 0);
+    regfree(&regex);
+
+    if (!reti) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int telefoneDuplicado(Contato contato[], int pos, long telefone) {
+    for (int i = 0; i < pos; i++) {
+        if (contato[i].telefone == telefone) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+ERROS adicionar(Contato contato[], int *pos) {
 
     if(*pos >= TOTAL)
         return MAX_TAREFAS;
@@ -10,32 +39,84 @@ ERROS adicionar(Contato contato[], int *pos){
     printf("Digite seu nome (primeiro nome): ");
     scanf("%s", contato[*pos].nome);
     clearBuffer();
-    if(sizeof(contato[*pos].nome) == 0){
+    if(strlen(contato[*pos].nome) == 0) {
         return NOME_INVALIDO;
     }
 
     printf("Digite seu sobrenome: ");
     scanf("%s", contato[*pos].sobrenome);
     clearBuffer();
-    if(sizeof(contato[*pos].sobrenome) == 0){
+    if(strlen(contato[*pos].sobrenome) == 0) {
         return SOBRENOME_INVALIDO;
     }
 
     printf("Digite seu email (aleatorio@gmail.com): ");
     scanf("%s", contato[*pos].email);
     clearBuffer();
-    if(sizeof(contato[*pos].email) == 0){
+    if(strlen(contato[*pos].email) == 0 || !validarEmail(contato[*pos].email)) {
         return EMAIL_INVALIDO;
     }
 
     printf("Digite seu telefone (11912345678): ");
     scanf("%ld", &contato[*pos].telefone);
     clearBuffer();
-    if(sizeof(contato[*pos]. telefone) == 0 || contato[*pos].telefone < 10000000000 || contato[*pos].telefone > 99999999999){
-        return  TELEFONE_INVALIDO;
+    if(contato[*pos].telefone < 10000000000 || contato[*pos].telefone > 99999999999 || telefoneDuplicado(contato, *pos, contato[*pos].telefone)) {
+        return TELEFONE_INVALIDO;
     }
 
     *pos = *pos + 1;
+
+    return OK;
+}
+
+ERROS alterar(Contato contato[], int *pos) {
+    if(*pos == 0)
+        return SEM_CONTATOS;
+
+    long telefone_alterar;
+    printf("Entre com o telefone do contato a ser alterado: ");
+    scanf("%ld", &telefone_alterar);
+    clearBuffer();
+
+    int i;
+    for(i = 0; i < *pos; i++){
+        if(contato[i].telefone == telefone_alterar)
+            break;
+    }
+
+    if(i == *pos)
+        return TELEFONE_NAO_ENCONTRADO;
+
+    printf("Digite o novo nome (primeiro nome): ");
+    scanf("%s", contato[i].nome);
+    clearBuffer();
+    if(strlen(contato[i].nome) == 0) {
+        return NOME_INVALIDO;
+    }
+
+    printf("Digite o novo sobrenome: ");
+    scanf("%s", contato[i].sobrenome);
+    clearBuffer();
+    if(strlen(contato[i].sobrenome) == 0) {
+        return SOBRENOME_INVALIDO;
+    }
+
+    printf("Digite o novo email (aleatorio@gmail.com): ");
+    scanf("%s", contato[i].email);
+    clearBuffer();
+    if(strlen(contato[i].email) == 0 || !validarEmail(contato[i].email)) {
+        return EMAIL_INVALIDO;
+    }
+
+    long novo_telefone;
+    printf("Digite o novo telefone (11912345678): ");
+    scanf("%ld", &novo_telefone);
+    clearBuffer();
+    if(novo_telefone < 10000000000 || novo_telefone > 99999999999 || (novo_telefone != telefone_alterar && telefoneDuplicado(contato, *pos, novo_telefone))) {
+        return TELEFONE_INVALIDO;
+    }
+
+    contato[i].telefone = novo_telefone;
 
     return OK;
 }
@@ -56,7 +137,7 @@ ERROS listar(Contato contatos[], int *pos) {
     return OK; 
 }
 
-ERROS deletar(Contato contato[], int *pos){
+ERROS deletar(Contato contato[], int *pos) {
     if(*pos == 0)
         return SEM_CONTATOS;
 
@@ -77,7 +158,7 @@ ERROS deletar(Contato contato[], int *pos){
     for(; i < *pos - 1; i++){
         contato[i] = contato[i+1];
     }
-  
+
     *pos = *pos - 1;
 
     return OK;
@@ -112,7 +193,7 @@ ERROS carregar(Contato contatos[], int *pos) {
     return OK;
 }
 
-void clearBuffer(){
+void clearBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
