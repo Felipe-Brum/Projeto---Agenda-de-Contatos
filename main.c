@@ -2,7 +2,6 @@
 #include "Agenda.h"
 
 int main(){
-
     funcao fs[] = {adicionar, listar, deletar};
 
     Contato contatos[TOTAL];
@@ -34,6 +33,8 @@ int main(){
                 printf("Erro ao executar a operacao: EMAIL_INVALIDO - %d\n", erro);
             else if(erro == TELEFONE_INVALIDO)
                 printf("Erro ao executar a operacao: TELEFONE_INVALIDO - %d\n", erro);
+            else if(erro == TELEFONE_DUPLICADO)
+                printf("Erro ao executar a operacao: TELEFONE_DUPLICADO - %d\n", erro);
         }
         else
             printf("Sair...\n");
