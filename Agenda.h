@@ -20,6 +20,7 @@ ERROS listar(Contato contato[], int *pos);
 ERROS deletar(Contato contato[], int *pos);
 ERROS salvar(Contato contatos[], int pos);
 ERROS carregar(Contato contatos[], int *pos);
+ERROS alterar(Contato contato[], int *pos);
 void clearBuffer();
 int validarEmail(const char *email);
 int telefoneDuplicado(Contato contato[], int pos, long telefone);

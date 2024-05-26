@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "Agenda.h"
 
-int main(){
-    funcao fs[] = {adicionar, listar, deletar};
+int main() {
+    funcao fs[] = {adicionar, listar, deletar, alterar};
 
     Contato contatos[TOTAL];
 
@@ -11,17 +11,18 @@ int main(){
     carregar(contatos, &pos);
 
     int opcao;
-    do{
+    do {
         printf("\nMenu principal\n");
         printf("1 - Adicionar contato\n");
         printf("2 - Listar contato\n");
         printf("3 - Deletar contato\n");
+        printf("4 - Alterar contato\n");
         printf("0 - Sair\n");
         printf("Escolha uma opcao: ");
 
         scanf("%d", &opcao);
         opcao--;
-        if(opcao > 2)
+        if(opcao > 3)
             printf("Opcao invalida\n");
         else if(opcao >= 0) {
             ERROS erro = fs[opcao](contatos, &pos);

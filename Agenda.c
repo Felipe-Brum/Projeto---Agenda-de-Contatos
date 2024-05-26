@@ -69,6 +69,58 @@ ERROS adicionar(Contato contato[], int *pos) {
     return OK;
 }
 
+ERROS alterar(Contato contato[], int *pos) {
+    if(*pos == 0)
+        return SEM_CONTATOS;
+
+    long telefone_alterar;
+    printf("Entre com o telefone do contato a ser alterado: ");
+    scanf("%ld", &telefone_alterar);
+    clearBuffer();
+
+    int i;
+    for(i = 0; i < *pos; i++){
+        if(contato[i].telefone == telefone_alterar)
+            break;
+    }
+
+    if(i == *pos)
+        return TELEFONE_NAO_ENCONTRADO;
+
+    printf("Digite o novo nome (primeiro nome): ");
+    scanf("%s", contato[i].nome);
+    clearBuffer();
+    if(strlen(contato[i].nome) == 0) {
+        return NOME_INVALIDO;
+    }
+
+    printf("Digite o novo sobrenome: ");
+    scanf("%s", contato[i].sobrenome);
+    clearBuffer();
+    if(strlen(contato[i].sobrenome) == 0) {
+        return SOBRENOME_INVALIDO;
+    }
+
+    printf("Digite o novo email (aleatorio@gmail.com): ");
+    scanf("%s", contato[i].email);
+    clearBuffer();
+    if(strlen(contato[i].email) == 0 || !validarEmail(contato[i].email)) {
+        return EMAIL_INVALIDO;
+    }
+
+    long novo_telefone;
+    printf("Digite o novo telefone (11912345678): ");
+    scanf("%ld", &novo_telefone);
+    clearBuffer();
+    if(novo_telefone < 10000000000 || novo_telefone > 99999999999 || (novo_telefone != telefone_alterar && telefoneDuplicado(contato, *pos, novo_telefone))) {
+        return TELEFONE_INVALIDO;
+    }
+
+    contato[i].telefone = novo_telefone;
+
+    return OK;
+}
+
 ERROS listar(Contato contatos[], int *pos) {
     if(*pos == 0)
         return SEM_CONTATOS;
