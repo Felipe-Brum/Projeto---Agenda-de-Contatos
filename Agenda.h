@@ -13,13 +13,13 @@ typedef struct {
     char email[tamanho_email];
 } Contato;
 
-typedef ERROS (*funcao)(Contato[], int*);
+typedef ERROS (funcao)(Contato[], int);
 
 ERROS adicionar(Contato contato[], int *pos);
 ERROS listar(Contato contato[], int *pos);
 ERROS deletar(Contato contato[], int *pos);
-ERROS salvar(Contato contatos[], int pos);
-ERROS carregar(Contato contatos[], int *pos);
+ERROS salvar(Contato contatos[], int pos, const char *filename);
+ERROS carregar(Contato contatos[], int *pos, const char *filename);
 ERROS alterar(Contato contato[], int *pos);
 void clearBuffer();
 int validarEmail(const char *email);

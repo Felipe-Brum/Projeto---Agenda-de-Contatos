@@ -32,7 +32,6 @@ int telefoneDuplicado(Contato contato[], int pos, long telefone) {
 }
 
 ERROS adicionar(Contato contato[], int *pos) {
-
     if(*pos >= TOTAL)
         return MAX_TAREFAS;
 
@@ -164,8 +163,8 @@ ERROS deletar(Contato contato[], int *pos) {
     return OK;
 }
 
-ERROS salvar(Contato contatos[], int pos) {
-    FILE *file = fopen("contatos.bin", "wb");
+ERROS salvar(Contato contatos[], int pos, const char *filename) {
+    FILE *file = fopen(filename, "wb");
     if (file == NULL) {
         printf("Não foi possível abrir o arquivo para escrita\n");
         return ERRO_ARQUIVO;
@@ -177,8 +176,8 @@ ERROS salvar(Contato contatos[], int pos) {
     return OK;
 }
 
-ERROS carregar(Contato contatos[], int *pos) {
-    FILE *file = fopen("contatos.bin", "rb");
+ERROS carregar(Contato contatos[], int *pos, const char *filename) {
+    FILE *file = fopen(filename, "rb");
     if (file == NULL) {
         printf("Não foi possível abrir o arquivo para leitura\n");
         return ERRO_ARQUIVO;
